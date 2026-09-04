@@ -3,6 +3,33 @@ import { profile } from '../data/content'
 import ShaderBackground from './ShaderBackground'
 import './Hero.css'
 
+/** 中文衬线笔画细，切 24 条会碎，取 14 条 */
+const SLATS = 14
+
+/**
+ * 百叶翻转标题：文字切成 N 条竖片，逐条绕 Y 轴翻开，附带极轻的正弦颤动。
+ * 技术路线参考 shader.se 的首屏（他们用 three.js TSL 做 24 片百叶 + 弹簧），
+ * 这里用 CSS 3D 独立实现，不引入 WebGL 依赖。
+ */
+function SlatLine({ line, lineIndex }) {
+  return (
+    <span className="hero-line">
+      <span className="hero-slats" aria-hidden="true">
+        {Array.from({ length: SLATS }, (_, i) => (
+          <span
+            className="hero-slat"
+            key={i}
+            style={{ '--i': i, '--n': SLATS, '--line': lineIndex }}
+          >
+            <span className="hero-slat-text">{line}</span>
+          </span>
+        ))}
+      </span>
+      <span className="sr-only">{line}</span>
+    </span>
+  )
+}
+
 export default function Hero() {
   const videoRef = useRef(null)
   const [hasVideo, setHasVideo] = useState(false)
@@ -42,9 +69,7 @@ export default function Hero() {
 
         <h1 className="hero-title">
           {profile.headline.map((line, i) => (
-            <span className="hero-line" key={line}>
-              <span style={{ animationDelay: `${0.2 + i * 0.16}s` }}>{line}</span>
-            </span>
+            <SlatLine line={line} lineIndex={i} key={line} />
           ))}
         </h1>
 

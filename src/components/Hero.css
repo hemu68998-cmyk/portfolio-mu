@@ -149,31 +149,65 @@
   overflow: hidden;
 }
 
-/* 默认可见：动画只负责"从下方升入"。
-   若动画被禁用/拦截（reduced-motion、扩展、渲染时序异常），标题仍然显示，
-   绝不能出现标题被 translateY 永久藏在 overflow:hidden 里的情况。 */
-.hero-line > span {
+/* ---- 百叶翻转标题 ---- */
+
+.hero-slats {
+  display: flex;
+  perspective: 1100px;
+  /* 颤动放在整行上，不放到每条百叶上——逐条各自合成会在切片交界处露出亚像素缝 */
+  animation: line-float 5.2s ease-in-out infinite;
+  animation-delay: calc(1.3s + var(--line) * 0.4s);
+}
+
+.hero-slat {
+  flex: 1 1 0;
+  min-width: 0;
+  overflow: hidden;
+  transform-style: preserve-3d;
+  backface-visibility: hidden;
+  transform-origin: 50% 50%;
+  transform: rotateY(-90deg);
+  /* 每条错开 46ms，第二行整体再延后 260ms */
+  animation: slat-open 0.95s var(--ease) calc(0.15s + var(--i) * 0.046s + var(--line) * 0.26s)
+    forwards;
+}
+
+/* 每条只显示自己那一列：文字放大到 N 倍槽宽，再左移 i 个槽宽 */
+.hero-slat-text {
   display: block;
-  animation: rise 1.1s var(--ease) both;
+  width: calc(100% * var(--n));
+  margin-left: calc(-100% * var(--i));
+  white-space: pre;
 }
 
-@keyframes rise {
-  from {
-    transform: translateY(110%);
-  }
+@keyframes slat-open {
   to {
-    transform: none;
+    transform: rotateY(0deg);
   }
 }
 
+/* 对应 shader.se 顶点阶段那两道 sin 颤动，幅度同样压到几乎看不见 */
+@keyframes line-float {
+  0%,
+  100% {
+    translate: 0 0;
+  }
+  50% {
+    translate: 0 -1.2px;
+  }
+}
+
+/* 动画被关掉时必须平铺可见，不能让标题停在 rotateY(-90deg) 上 */
 @media (prefers-reduced-motion: reduce) {
-  .hero-line > span {
+  .hero-slat,
+  .hero-slats {
+    transform: none;
     animation: none;
   }
 }
 
 /* 不用 italic：STIX 无中文字形，中文会回落宋体并被浏览器"伪斜"，笔画会撕裂 */
-.hero-title .hero-line:last-child > span {
+.hero-title .hero-line:last-child {
   color: rgba(252, 249, 243, 0.72);
 }
 

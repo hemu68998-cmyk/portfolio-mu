@@ -1,0 +1,240 @@
+:root {
+  /* 取自 shader.se 生产 CSS 的 STIX Two Text + 奶白 #fcf9f3，配深色画布 */
+  --bg: #000;
+  --bg-soft: #07070a;
+  --panel: rgba(252, 249, 243, 0.03);
+  --panel-strong: rgba(252, 249, 243, 0.06);
+  --line: rgba(252, 249, 243, 0.12);
+  --line-strong: rgba(252, 249, 243, 0.26);
+  --text: #fcf9f3;
+  --text-mid: rgba(252, 249, 243, 0.62);
+  --text-dim: rgba(252, 249, 243, 0.38);
+  --cyan: #4de3ff;
+  --violet: #9a7bff;
+  --lime: #c6f24e;
+  --amber: #ffb457;
+  --shell: 1700px;
+  --gutter: clamp(24px, 4vw, 72px);
+  --ease: cubic-bezier(0.22, 1, 0.36, 1);
+  /* 取自 sebs.computer 生产 CSS 的真实 token */
+  --font-serif: 'STIX Two Text', 'Songti SC', 'Source Han Serif SC', serif;
+  --font-mono: ui-monospace, 'SF Mono', Menlo, Consolas, 'DejaVu Sans Mono', monospace;
+  --radius: 0.625rem;
+  --micro: 10px;
+  --micro-lg: 11px;
+  --tracking-label: 0.14em;
+  --ease-out: cubic-bezier(0, 0, 0.2, 1);
+  color-scheme: dark;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--text);
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'PingFang SC',
+    'Hiragino Sans GB', 'Microsoft YaHei', sans-serif;
+  font-size: 16px;
+  line-height: 1.7;
+  -webkit-font-smoothing: antialiased;
+  overflow-x: hidden;
+}
+
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 2;
+  opacity: 0.035;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3'/%3E%3C/filter%3E%3Crect width='120' height='120' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+
+h1,
+h2,
+h3,
+h4,
+p {
+  margin: 0;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+button {
+  font: inherit;
+  color: inherit;
+  background: none;
+  border: none;
+  cursor: pointer;
+}
+
+::selection {
+  background: var(--text);
+  color: #000;
+}
+
+::-webkit-scrollbar {
+  width: 10px;
+}
+
+::-webkit-scrollbar-track {
+  background: #000;
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgba(252, 249, 243, 0.16);
+  border-radius: 999px;
+}
+
+.shell {
+  width: 100%;
+  max-width: var(--shell);
+  margin: 0 auto;
+  padding: 0 var(--gutter);
+}
+
+.section {
+  position: relative;
+  padding: clamp(96px, 9vw, 168px) 0;
+}
+
+.section-line {
+  border-top: 1px solid var(--line);
+}
+
+.eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+  font-family: var(--font-mono);
+  font-size: var(--micro-lg);
+  letter-spacing: var(--tracking-label);
+  text-transform: uppercase;
+  color: var(--text-dim);
+}
+
+.eyebrow::before {
+  content: '';
+  width: 40px;
+  height: 1px;
+  background: linear-gradient(90deg, var(--text-dim), transparent);
+}
+
+.section-title {
+  margin-top: 26px;
+  font-family: var(--font-serif);
+  font-size: clamp(36px, 3.8vw, 68px);
+  font-weight: 400;
+  line-height: 1.22;
+  letter-spacing: -0.01em;
+}
+
+.section-note {
+  margin-top: 18px;
+  max-width: 62ch;
+  color: var(--text-mid);
+}
+
+.reveal {
+  opacity: 0;
+  transform: translateY(34px);
+  transition: opacity 0.9s var(--ease), transform 0.9s var(--ease);
+}
+
+.reveal.in {
+  opacity: 1;
+  transform: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .reveal {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
+  html {
+    scroll-behavior: auto;
+  }
+}
+
+/* ---- 参照 sebs.computer 的 mono 微标签系统 ---- */
+
+.mono {
+  font-family: var(--font-mono);
+}
+
+.label {
+  font-family: var(--font-mono);
+  font-size: var(--micro);
+  letter-spacing: var(--tracking-label);
+  text-transform: uppercase;
+  color: var(--text-dim);
+}
+
+.label-lg {
+  font-size: var(--micro-lg);
+}
+
+.status {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  font-family: var(--font-mono);
+  font-size: var(--micro-lg);
+  letter-spacing: 0.08em;
+  color: var(--text-mid);
+}
+
+.status-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--lime);
+  box-shadow: 0 0 10px var(--lime);
+  animation: dot-pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+
+@keyframes dot-pulse {
+  50% {
+    opacity: 0.4;
+  }
+}
+
+/* 悬停提示气泡：对应 sebs 的 group-hover:block tooltip */
+.hint {
+  position: relative;
+}
+
+.hint::after {
+  content: attr(data-hint);
+  position: absolute;
+  top: calc(100% + 6px);
+  left: 50%;
+  transform: translateX(-50%);
+  padding: 4px 8px;
+  border-radius: 6px;
+  background: #1b2130;
+  color: #fff;
+  font-family: var(--font-mono);
+  font-size: var(--micro);
+  letter-spacing: 0.06em;
+  white-space: nowrap;
+  opacity: 0;
+  pointer-events: none;
+  z-index: 20;
+  transition: opacity 0.2s var(--ease-out);
+}
+
+.hint:hover::after {
+  opacity: 1;
+}

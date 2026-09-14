@@ -1,7 +1,8 @@
 import { useEffect } from 'react'
 import Nav from './components/Nav'
-import FilmStrip from './components/FilmStrip'
+import Hero from './components/Hero'
 import About from './components/About'
+import Projects from './components/Projects'
 import Strengths from './components/Strengths'
 import Contact from './components/Contact'
 import { initSmoothScroll } from './lib/smoothScroll'
@@ -13,8 +14,9 @@ export default function App() {
     <>
       <Nav />
       <main>
-        <FilmStrip />
+        <Hero />
         <About />
+        <Projects />
         <Strengths />
         <Contact />
       </main>

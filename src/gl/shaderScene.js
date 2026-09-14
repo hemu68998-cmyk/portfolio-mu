@@ -52,20 +52,19 @@ void main() {
     fbm(p * 2.2 + 3.4 * q + vec2(1.7, 9.2) + 0.8 * t),
     fbm(p * 2.2 + 3.4 * q + vec2(8.3, 2.8) - 0.6 * t + s)
   );
-  float f = fbm(p * 1.8 + 3.0 * r);
+  float f = fbm(p * 1.6 + 2.6 * r);
 
-  // 中心亮、边缘暗的柔光带
-  float glow = smoothstep(1.05, 0.08, length(p * vec2(0.68, 1.0)));
-  float band = smoothstep(0.30, 0.80, f) * glow;
+  // 线性映射 + 基础光：fbm 输出集中在低值时也不会全黑
+  float band = 0.18 + 0.82 * f;
 
-  // 注意 gl_FragCoord 原点在左下：uv.y 越大越靠上，让顶部更亮
-  band *= mix(0.38, 1.06, uv.y);
+  // 顶部略亮、底部略暗
+  band *= mix(0.55, 1.15, uv.y);
 
-  // 左侧是正文区，压暗保证可读性（CSS 遮罩还会再压一层）
-  band *= mix(0.5, 1.0, smoothstep(0.2, 0.7, uv.x));
+  // 左侧正文区压暗保证可读，右侧装饰区全亮
+  band *= mix(0.42, 1.0, smoothstep(0.12, 0.6, uv.x));
 
   vec3 cream = vec3(0.988, 0.976, 0.953);
-  vec3 col = cream * band * 1.35;
+  vec3 col = cream * band * 1.5;
 
   // 细颗粒，抵消 8bit 色带
   float grain = (hash(gl_FragCoord.xy + uTime) - 0.5) * 0.02;

@@ -1,88 +1,35 @@
 .filmstrip {
   position: relative;
+  background: #000;
+}
+
+.fs-sticky {
+  position: sticky;
+  top: 0;
   height: 100vh;
   height: 100svh;
   overflow: hidden;
-  background: #000;
-  touch-action: none;
 }
 
-/* ---- 轨道与视口 ---- */
+/* ---- 幻灯片：绝对定位铺满，滚动进度驱动 opacity/scale ---- */
 
-.fs-view {
+.fs-slide {
   position: absolute;
   inset: 0;
-  z-index: 1;
-  perspective: 1600px;
-  cursor: grab;
-  user-select: none;
-}
-
-.fs-view:active {
-  cursor: grabbing;
-}
-
-.fs-track {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  display: flex;
-  align-items: center;
-  gap: clamp(20px, 3vw, 48px);
-  /* 平移由 JS 写入：让当前卡片中心对准视口中心 */
-  transform: translate3d(0, -50%, 0);
-  will-change: transform;
-}
-
-/* ---- 胶片卡片：中间大、两侧透视露边 ---- */
-
-.fs-card {
-  --o: 0;
-  --d: 0;
-  flex: 0 0 clamp(300px, 52vw, 780px);
-  height: min(78vh, 640px);
-  transform-style: preserve-3d;
-  transform: translate3d(0, 0, 0)
-    rotateY(calc(var(--o) * -32deg))
-    translateZ(calc(var(--d) * -260px))
-    scale(calc(1 - var(--d) * 0.1));
-  filter: brightness(calc(1 - var(--d) * 0.38));
-  opacity: calc(1 - var(--d) * 0.32);
-  transition: transform 0.85s var(--ease), filter 0.85s var(--ease),
-    opacity 0.85s var(--ease);
-  pointer-events: auto;
-}
-
-.fs-card.on {
-  filter: none;
-  opacity: 1;
-}
-
-.fs-frame {
-  width: 100%;
-  height: 100%;
-  border-radius: var(--radius);
   overflow: hidden;
-}
-
-.fs-media {
-  position: relative;
-  width: 100%;
-  height: 100%;
-  overflow: hidden;
-  background: #101319;
+  opacity: 0;
+  will-change: opacity, transform;
 }
 
 .fs-img {
-  display: block;
+  position: absolute;
+  inset: 0;
   width: 100%;
   height: 100%;
   object-fit: cover;
 }
 
 .fs-fallback {
-  position: absolute;
-  inset: 0;
   display: grid;
   place-items: center;
   background:
@@ -92,7 +39,7 @@
 
 .fs-fallback span {
   font-family: var(--font-serif);
-  font-size: clamp(120px, 16vw, 240px);
+  font-size: clamp(120px, 18vw, 280px);
   color: rgba(252, 249, 243, 0.35);
 }
 
@@ -101,9 +48,9 @@
   inset: 0;
   background: linear-gradient(
     180deg,
-    rgba(0, 0, 0, 0.42) 0%,
-    rgba(0, 0, 0, 0.06) 32%,
-    rgba(0, 0, 0, 0.84) 100%
+    rgba(0, 0, 0, 0.55) 0%,
+    rgba(0, 0, 0, 0.1) 34%,
+    rgba(0, 0, 0, 0.86) 100%
   );
 }
 
@@ -111,34 +58,34 @@
 
 .fs-caption {
   position: absolute;
-  left: clamp(20px, 3vw, 40px);
-  right: clamp(20px, 3vw, 40px);
-  bottom: clamp(18px, 2.6vw, 34px);
+  left: clamp(24px, 6vw, 96px);
+  bottom: clamp(120px, 18vh, 200px);
   z-index: 2;
+  max-width: 24ch;
 }
 
 .fs-title {
-  margin-top: 10px;
+  margin-top: 16px;
   font-family: var(--font-serif);
-  font-size: clamp(26px, 3.4vw, 52px);
+  font-size: clamp(40px, 6.5vw, 110px);
   font-weight: 400;
-  line-height: 1.08;
-  letter-spacing: -0.015em;
+  line-height: 1.05;
+  letter-spacing: -0.02em;
   color: var(--text);
 }
 
 .fs-viewlink {
   display: inline-flex;
   align-items: center;
-  gap: 8px;
-  margin-top: 16px;
-  font-size: 14px;
-  letter-spacing: 0.03em;
+  gap: 10px;
+  margin-top: 28px;
+  font-size: 15px;
+  letter-spacing: 0.04em;
   color: var(--text);
   border-bottom: 1px solid rgba(252, 249, 243, 0.4);
-  padding-bottom: 5px;
+  padding-bottom: 6px;
   cursor: pointer;
-  transition: border-color 0.4s var(--ease);
+  transition: border-color 0.4s var(--ease), color 0.4s var(--ease);
 }
 
 .fs-viewlink:hover {
@@ -147,10 +94,10 @@
 
 .fs-badge {
   position: absolute;
-  right: clamp(18px, 2.6vw, 30px);
-  top: clamp(18px, 2.6vw, 30px);
+  right: clamp(24px, 6vw, 96px);
+  bottom: clamp(120px, 18vh, 200px);
   z-index: 2;
-  padding: 6px 12px;
+  padding: 7px 14px;
   font-size: var(--micro-lg);
   letter-spacing: 0.06em;
   border: 1px solid var(--line-strong);
@@ -200,36 +147,6 @@
   padding: 0 2px;
 }
 
-/* ---- 箭头 ---- */
-
-.fs-arrows {
-  position: absolute;
-  right: clamp(24px, 6vw, 96px);
-  bottom: clamp(90px, 13vh, 160px);
-  z-index: 3;
-  display: flex;
-  gap: 12px;
-}
-
-.fs-arrow {
-  width: 52px;
-  height: 52px;
-  display: grid;
-  place-items: center;
-  font-size: 19px;
-  color: var(--text);
-  border: 1px solid var(--line-strong);
-  border-radius: 50%;
-  background: rgba(0, 0, 0, 0.35);
-  backdrop-filter: blur(8px);
-  transition: background 0.4s var(--ease), transform 0.4s var(--ease);
-}
-
-.fs-arrow:hover {
-  background: rgba(252, 249, 243, 0.14);
-  transform: translateY(-2px);
-}
-
 /* ---- 底部提示 ---- */
 
 .fs-bottom {
@@ -241,19 +158,11 @@
 }
 
 .fs-scrollhint {
-  width: 100%;
   display: flex;
   align-items: center;
   gap: 20px;
   padding: 22px clamp(24px, 6vw, 96px);
   color: var(--text-dim);
-  text-align: left;
-  cursor: pointer;
-  transition: color 0.4s var(--ease);
-}
-
-.fs-scrollhint:hover {
-  color: var(--text);
 }
 
 .fs-scrollbar {
@@ -262,14 +171,8 @@
   background: linear-gradient(90deg, var(--line-strong), transparent);
 }
 
-@media (max-width: 900px) {
-  .fs-card {
-    flex-basis: 80vw;
-  }
-}
-
 @media (prefers-reduced-motion: reduce) {
-  .fs-card {
+  .fs-slide {
     transition: none;
   }
 }

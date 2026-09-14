@@ -5,34 +5,48 @@ import './FilmStrip.css'
 const clamp = (v, a, b) => Math.min(b, Math.max(a, v))
 const lerp = (a, b, t) => a + (b - a) * t
 
-/** 每个作品 = 一屏大图 + 叠加标题/副标题/View project，对标参考站结构 */
-function Slide({ project, active }) {
+function Card({ project, i, activeIndex }) {
   const [imgOk, setImgOk] = useState(true)
+  const offset = i - activeIndex
+  const abs = Math.abs(offset)
+
   return (
-    <article className={active ? 'fs-slide on' : 'fs-slide'} aria-hidden={!active}>
-      {imgOk ? (
-        <img
-          className="fs-img"
-          src={`/work-${project.index}.jpg`}
-          alt={project.title}
-          onError={() => setImgOk(false)}
-        />
-      ) : (
-        <div className="fs-img fs-fallback" aria-hidden="true">
-          <span>{project.index}</span>
+    <article
+      className={abs < 0.001 ? 'fs-card on' : 'fs-card'}
+      aria-hidden={abs > 0.75}
+      style={{
+        '--o': offset,
+        '--d': clamp(abs, 0, 3),
+        zIndex: 100 - Math.round(abs * 10),
+      }}
+    >
+      <div className="fs-frame">
+        <div className="fs-media">
+          {imgOk ? (
+            <img
+              className="fs-img"
+              src={`/work-${project.index}.jpg`}
+              alt={project.title}
+              onError={() => setImgOk(false)}
+            />
+          ) : (
+            <div className="fs-img fs-fallback" aria-hidden="true">
+              <span>{project.index}</span>
+            </div>
+          )}
+          <div className="fs-dim" aria-hidden="true" />
+
+          <div className="fs-caption">
+            <p className="fs-scene label label-lg">{project.scene}</p>
+            <h2 className="fs-title">{project.title}</h2>
+            <span className="fs-viewlink">
+              View project <span aria-hidden="true">↗</span>
+            </span>
+          </div>
+
+          <span className="fs-badge mono">{project.period}</span>
         </div>
-      )}
-      <div className="fs-dim" aria-hidden="true" />
-
-      <div className="fs-caption">
-        <p className="fs-scene label label-lg">{project.scene}</p>
-        <h2 className="fs-title">{project.title}</h2>
-        <span className="fs-viewlink">
-          View project <span aria-hidden="true">↗</span>
-        </span>
       </div>
-
-      <span className="fs-badge mono">{project.period}</span>
     </article>
   )
 }
@@ -51,7 +65,15 @@ export default function FilmStrip() {
 
   const write = useCallback(() => {
     const track = trackRef.current
-    if (track) track.style.transform = `translate3d(${-progRef.current * 100}vw, 0, 0)`
+    if (!track) return
+    const first = track.firstElementChild
+    if (!first) return
+    const cardW = first.getBoundingClientRect().width
+    const gap = parseFloat(getComputedStyle(track).columnGap || '0') || 0
+    const step = cardW + gap
+    // 让「当前进度对应的卡片中心」对齐视口中心（轨道 left:50%）
+    const offset = progRef.current * step + cardW / 2
+    track.style.transform = `translate3d(${-offset}px, -50%, 0)`
   }, [])
 
   const setTarget = useCallback(
@@ -71,7 +93,6 @@ export default function FilmStrip() {
     [setTarget, total]
   )
 
-  // rAF 惯性回中
   useEffect(() => {
     write()
     const tick = () => {
@@ -79,7 +100,7 @@ export default function FilmStrip() {
         const cur = progRef.current
         const tgt = targetRef.current
         if (Math.abs(tgt - cur) > 0.001) {
-          progRef.current = lerp(cur, tgt, 0.14)
+          progRef.current = lerp(cur, tgt, 0.15)
           write()
           const idx = clamp(Math.round(progRef.current), 0, total - 1)
           if (idx !== activeRef.current) {
@@ -94,7 +115,6 @@ export default function FilmStrip() {
     return () => cancelAnimationFrame(rafRef.current)
   }, [write, total])
 
-  // 拖动
   useEffect(() => {
     const view = viewRef.current
     if (!view) return
@@ -116,7 +136,7 @@ export default function FilmStrip() {
     const move = (e) => {
       if (!draggingRef.current) return
       const dx = e.clientX - startX
-      progRef.current = clamp(startP - dx / view.clientWidth, 0, total - 1)
+      progRef.current = clamp(startP - (dx / view.clientWidth) * 2.2, 0, total - 1)
       targetRef.current = progRef.current
       write()
       const now = performance.now()
@@ -128,7 +148,7 @@ export default function FilmStrip() {
     const up = () => {
       if (!draggingRef.current) return
       draggingRef.current = false
-      go(progRef.current + clamp(vel * 0.22, -1.4, 1.4))
+      go(progRef.current + clamp(vel * 0.2, -1.4, 1.4))
     }
     const cancel = () => {
       draggingRef.current = false
@@ -147,7 +167,6 @@ export default function FilmStrip() {
     }
   }, [go, setTarget, write, total])
 
-  // 滚轮：竖滚横向切作品；滚到最后一个后放行，让页面继续向下进入 About
   useEffect(() => {
     const view = viewRef.current
     if (!view) return
@@ -156,7 +175,6 @@ export default function FilmStrip() {
       const atFirst = activeRef.current <= 0
       const goingDown = e.deltaY > 0
       const goingUp = e.deltaY < 0
-      // 已到边界时，放行给页面垂直滚动
       if ((atLast && goingDown) || (atFirst && goingUp)) return
       e.preventDefault()
       go(activeRef.current + (goingDown ? 1 : -1))
@@ -165,7 +183,6 @@ export default function FilmStrip() {
     return () => view.removeEventListener('wheel', onWheel)
   }, [go, total])
 
-  // 键盘
   useEffect(() => {
     const onKey = (e) => {
       if (e.key === 'ArrowLeft') go(activeRef.current - 1)
@@ -181,12 +198,6 @@ export default function FilmStrip() {
 
   return (
     <section className="filmstrip" id="work">
-      <div className="fs-track" ref={trackRef}>
-        {projects.map((p, i) => (
-          <Slide project={p} active={i === active} key={p.index} />
-        ))}
-      </div>
-
       <header className="fs-top">
         <div className="shell fs-top-inner">
           <div className="fs-brand">
@@ -198,6 +209,14 @@ export default function FilmStrip() {
           </span>
         </div>
       </header>
+
+      <div className="fs-view" ref={viewRef} role="group" aria-label="作品胶片带">
+        <div className="fs-track" ref={trackRef}>
+          {projects.map((p, i) => (
+            <Card project={p} i={i} activeIndex={active} key={p.index} />
+          ))}
+        </div>
+      </div>
 
       <div className="fs-arrows" role="group" aria-label="切换作品">
         <button type="button" className="fs-arrow" onClick={() => go(active - 1)} aria-label="上一个作品">

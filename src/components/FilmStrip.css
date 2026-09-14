@@ -7,37 +7,82 @@
   touch-action: none;
 }
 
-/* ---- 轨道：每屏一个作品，横向平移 ---- */
+/* ---- 轨道与视口 ---- */
+
+.fs-view {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  perspective: 1600px;
+  cursor: grab;
+  user-select: none;
+}
+
+.fs-view:active {
+  cursor: grabbing;
+}
 
 .fs-track {
   position: absolute;
-  inset: 0;
+  top: 50%;
+  left: 50%;
   display: flex;
+  align-items: center;
+  gap: clamp(20px, 3vw, 48px);
+  /* 平移由 JS 写入：让当前卡片中心对准视口中心 */
+  transform: translate3d(0, -50%, 0);
   will-change: transform;
 }
 
-.fs-slide {
-  position: relative;
-  flex: 0 0 100vw;
-  height: 100%;
-  overflow: hidden;
-  opacity: 0.35;
-  transition: opacity 0.7s var(--ease);
+/* ---- 胶片卡片：中间大、两侧透视露边 ---- */
+
+.fs-card {
+  --o: 0;
+  --d: 0;
+  flex: 0 0 clamp(300px, 52vw, 780px);
+  height: min(78vh, 640px);
+  transform-style: preserve-3d;
+  transform: translate3d(0, 0, 0)
+    rotateY(calc(var(--o) * -32deg))
+    translateZ(calc(var(--d) * -260px))
+    scale(calc(1 - var(--d) * 0.1));
+  filter: brightness(calc(1 - var(--d) * 0.38));
+  opacity: calc(1 - var(--d) * 0.32);
+  transition: transform 0.85s var(--ease), filter 0.85s var(--ease),
+    opacity 0.85s var(--ease);
+  pointer-events: auto;
 }
 
-.fs-slide.on {
+.fs-card.on {
+  filter: none;
   opacity: 1;
 }
 
+.fs-frame {
+  width: 100%;
+  height: 100%;
+  border-radius: var(--radius);
+  overflow: hidden;
+}
+
+.fs-media {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  background: #101319;
+}
+
 .fs-img {
-  position: absolute;
-  inset: 0;
+  display: block;
   width: 100%;
   height: 100%;
   object-fit: cover;
 }
 
 .fs-fallback {
+  position: absolute;
+  inset: 0;
   display: grid;
   place-items: center;
   background:
@@ -47,7 +92,7 @@
 
 .fs-fallback span {
   font-family: var(--font-serif);
-  font-size: clamp(120px, 18vw, 280px);
+  font-size: clamp(120px, 16vw, 240px);
   color: rgba(252, 249, 243, 0.35);
 }
 
@@ -56,44 +101,44 @@
   inset: 0;
   background: linear-gradient(
     180deg,
-    rgba(0, 0, 0, 0.55) 0%,
-    rgba(0, 0, 0, 0.08) 34%,
-    rgba(0, 0, 0, 0.86) 100%
+    rgba(0, 0, 0, 0.42) 0%,
+    rgba(0, 0, 0, 0.06) 32%,
+    rgba(0, 0, 0, 0.84) 100%
   );
 }
 
-/* ---- 作品文案：叠加在图上，对标参考站 ---- */
+/* ---- 文案叠加 ---- */
 
 .fs-caption {
   position: absolute;
-  left: clamp(24px, 6vw, 96px);
-  bottom: clamp(120px, 16vh, 200px);
+  left: clamp(20px, 3vw, 40px);
+  right: clamp(20px, 3vw, 40px);
+  bottom: clamp(18px, 2.6vw, 34px);
   z-index: 2;
-  max-width: 24ch;
 }
 
 .fs-title {
-  margin-top: 16px;
+  margin-top: 10px;
   font-family: var(--font-serif);
-  font-size: clamp(40px, 6.5vw, 110px);
+  font-size: clamp(26px, 3.4vw, 52px);
   font-weight: 400;
-  line-height: 1.05;
-  letter-spacing: -0.02em;
+  line-height: 1.08;
+  letter-spacing: -0.015em;
   color: var(--text);
 }
 
 .fs-viewlink {
   display: inline-flex;
   align-items: center;
-  gap: 10px;
-  margin-top: 28px;
-  font-size: 15px;
-  letter-spacing: 0.04em;
+  gap: 8px;
+  margin-top: 16px;
+  font-size: 14px;
+  letter-spacing: 0.03em;
   color: var(--text);
   border-bottom: 1px solid rgba(252, 249, 243, 0.4);
-  padding-bottom: 6px;
+  padding-bottom: 5px;
   cursor: pointer;
-  transition: border-color 0.4s var(--ease), color 0.4s var(--ease);
+  transition: border-color 0.4s var(--ease);
 }
 
 .fs-viewlink:hover {
@@ -102,10 +147,10 @@
 
 .fs-badge {
   position: absolute;
-  right: clamp(24px, 6vw, 96px);
-  bottom: clamp(120px, 16vh, 200px);
+  right: clamp(18px, 2.6vw, 30px);
+  top: clamp(18px, 2.6vw, 30px);
   z-index: 2;
-  padding: 7px 14px;
+  padding: 6px 12px;
   font-size: var(--micro-lg);
   letter-spacing: 0.06em;
   border: 1px solid var(--line-strong);
@@ -114,7 +159,7 @@
   backdrop-filter: blur(8px);
 }
 
-/* ---- 顶部品牌 + 计数 ---- */
+/* ---- 顶部品牌 ---- */
 
 .fs-top {
   position: absolute;
@@ -155,12 +200,12 @@
   padding: 0 2px;
 }
 
-/* ---- 左右箭头 ---- */
+/* ---- 箭头 ---- */
 
 .fs-arrows {
   position: absolute;
   right: clamp(24px, 6vw, 96px);
-  bottom: clamp(140px, 19vh, 220px);
+  bottom: clamp(90px, 13vh, 160px);
   z-index: 3;
   display: flex;
   gap: 12px;
@@ -185,7 +230,7 @@
   transform: translateY(-2px);
 }
 
-/* ---- 底部滚动提示 ---- */
+/* ---- 底部提示 ---- */
 
 .fs-bottom {
   position: absolute;
@@ -217,8 +262,14 @@
   background: linear-gradient(90deg, var(--line-strong), transparent);
 }
 
+@media (max-width: 900px) {
+  .fs-card {
+    flex-basis: 80vw;
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
-  .fs-slide {
+  .fs-card {
     transition: none;
   }
 }

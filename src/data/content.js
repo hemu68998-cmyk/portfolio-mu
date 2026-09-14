@@ -19,9 +19,8 @@ export const profile = {
 }
 
 export const nav = [
-  { id: 'hero', label: '首页' },
+  { id: 'work', label: '作品' },
   { id: 'about', label: '关于我' },
-  { id: 'work', label: '精选项目' },
   { id: 'strength', label: '个人优势' },
   { id: 'contact', label: '联系我' },
 ]

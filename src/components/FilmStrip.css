@@ -1,0 +1,294 @@
+.filmstrip {
+  position: relative;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 120px 0 48px;
+  overflow: hidden;
+  touch-action: none;
+}
+
+.fs-bg {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+}
+
+.fs-veil {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    180deg,
+    rgba(0, 0, 0, 0.5) 0%,
+    rgba(0, 0, 0, 0.2) 40%,
+    rgba(0, 0, 0, 0.94) 100%
+  );
+}
+
+.fs-head {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 32px;
+  margin-bottom: clamp(24px, 3vw, 44px);
+}
+
+.fs-status {
+  display: inline-flex;
+}
+
+.fs-title-big {
+  margin-top: 18px;
+  font-family: var(--font-serif);
+  font-size: clamp(30px, 3.4vw, 54px);
+  font-weight: 400;
+  line-height: 1.12;
+  letter-spacing: -0.01em;
+}
+
+.fs-tagline {
+  margin-top: 12px;
+  font-family: var(--font-mono);
+  font-size: 12px;
+  letter-spacing: 0.08em;
+  color: var(--text-mid);
+}
+
+.fs-meter {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  flex-shrink: 0;
+}
+
+.fs-count {
+  font-size: 13px;
+  letter-spacing: 0.14em;
+  color: var(--text);
+}
+
+.fs-count i {
+  font-style: normal;
+  color: var(--text-dim);
+  padding: 0 2px;
+}
+
+.fs-track {
+  width: clamp(80px, 12vw, 200px);
+  height: 1px;
+  background: var(--line);
+  overflow: hidden;
+}
+
+.fs-track-fill {
+  display: block;
+  height: 100%;
+  background: var(--text);
+  transform-origin: left;
+  transition: transform 0.5s var(--ease);
+}
+
+/* ---- 胶片视口与轨道 ---- */
+
+.fs-view {
+  position: relative;
+  z-index: 1;
+  width: 100%;
+  perspective: 1400px;
+  cursor: grab;
+  user-select: none;
+}
+
+.fs-view:active {
+  cursor: grabbing;
+}
+
+.fs-track {
+  display: flex;
+  align-items: center;
+  gap: clamp(16px, 2.4vw, 40px);
+  /* --tx 由 JS 写入：让当前帧始终对准视口中心 */
+  transform: translate3d(var(--tx, 0px), 0, 0);
+  transition: none;
+  will-change: transform;
+}
+
+.fs-card {
+  --o: 0;
+  --d: 0;
+  flex: 0 0 clamp(300px, 30vw, 470px);
+  transform-style: preserve-3d;
+  transform: translate3d(calc(var(--o) * 8px), 0, 0)
+    rotateY(calc(var(--o) * -26deg)) translateZ(calc(var(--d) * -220px))
+    scale(calc(1 - var(--d) * 0.08));
+  filter: brightness(calc(1 - var(--d) * 0.34));
+  opacity: calc(1 - var(--d) * 0.42);
+  transition: transform 0.9s var(--ease), filter 0.9s var(--ease),
+    opacity 0.9s var(--ease);
+  pointer-events: auto;
+}
+
+.fs-card.on {
+  filter: none;
+  opacity: 1;
+}
+
+.fs-frame {
+  border: 1px solid var(--line-strong);
+  border-radius: var(--radius);
+  background: var(--bg-soft);
+  overflow: hidden;
+}
+
+/* 胶片齿孔：上下各一排镂空方孔 */
+.fs-perf {
+  display: block;
+  height: 14px;
+  background-image: radial-gradient(
+    circle at center,
+    var(--bg) 0 var(--perf-size, 3px),
+    transparent calc(var(--perf-size, 3px) + 0.5px)
+  );
+  background-size: 22px 22px;
+  background-repeat: repeat-x;
+  background-position: center;
+  opacity: 0.9;
+}
+
+.fs-media {
+  position: relative;
+  aspect-ratio: 16 / 10;
+  overflow: hidden;
+  background: var(--bg-soft);
+}
+
+.fs-media img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.fs-art {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  background:
+    radial-gradient(70% 70% at 32% 24%, rgba(252, 249, 243, 0.12), transparent 70%),
+    #000;
+}
+
+.fs-art span {
+  font-family: var(--font-serif);
+  font-size: clamp(64px, 7vw, 120px);
+  color: rgba(252, 249, 243, 0.5);
+}
+
+.fs-badge {
+  position: absolute;
+  left: 12px;
+  bottom: 12px;
+  padding: 5px 10px;
+  font-size: var(--micro-lg);
+  letter-spacing: 0.06em;
+  border: 1px solid var(--line-strong);
+  border-radius: var(--radius);
+  background: rgba(0, 0, 0, 0.66);
+  backdrop-filter: blur(8px);
+}
+
+.fs-body {
+  padding: 18px 20px 22px;
+}
+
+.fs-scene {
+  display: block;
+}
+
+.fs-title {
+  margin-top: 10px;
+  font-family: var(--font-serif);
+  font-size: clamp(20px, 1.6vw, 28px);
+  font-weight: 400;
+  line-height: 1.24;
+  letter-spacing: -0.01em;
+}
+
+.fs-summary {
+  margin-top: 10px;
+  color: var(--text-mid);
+  font-size: 14px;
+  line-height: 1.6;
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.fs-tags {
+  margin-top: 14px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.fs-hint {
+  position: absolute;
+  left: 50%;
+  bottom: 6px;
+  transform: translateX(-50%);
+  pointer-events: none;
+  white-space: nowrap;
+}
+
+/* ---- 底部导航 ---- */
+
+.fs-nav {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  margin-top: clamp(24px, 3vw, 44px);
+}
+
+.fs-arrow {
+  width: 48px;
+  height: 48px;
+  display: grid;
+  place-items: center;
+  font-size: 18px;
+  color: var(--text-mid);
+  border: 1px solid var(--line);
+  border-radius: 50%;
+  transition: color 0.4s var(--ease), border-color 0.4s var(--ease),
+    background 0.4s var(--ease), transform 0.4s var(--ease);
+}
+
+.fs-arrow:hover {
+  color: #000;
+  background: var(--text);
+  border-color: var(--text);
+  transform: translateY(-2px);
+}
+
+.fs-index {
+  font-size: 13px;
+  letter-spacing: 0.14em;
+  color: var(--text-dim);
+}
+
+@media (max-width: 900px) {
+  .fs-card {
+    flex-basis: 70vw;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .fs-track,
+  .fs-card {
+    transition: none;
+  }
+}

@@ -1,0 +1,444 @@
+.jr {
+  --jr-ink: #16130f;
+  --jr-red: #d7261e;
+  position: relative;
+  padding: 88px 0 72px;
+  background: linear-gradient(180deg, #fdf7ec 0%, #f3f6ef 58%, #e8f1f0 100%);
+  color: var(--jr-ink);
+}
+
+.jr-head {
+  padding: 0 var(--gutter);
+  text-align: center;
+}
+
+.jr-ch {
+  display: inline-block;
+  padding: 3px 8px;
+  font-size: 11px;
+  letter-spacing: 0.12em;
+  color: #fff;
+  background: var(--jr-red);
+}
+
+.jr-head h2 {
+  margin-top: 12px;
+  font-family: 'Helvetica Neue', 'PingFang SC', sans-serif;
+  font-size: clamp(26px, 2.6vw, 44px);
+  font-weight: 600;
+  line-height: 1.05;
+  letter-spacing: -0.02em;
+}
+
+.jr-head p:last-child {
+  margin-top: 8px;
+  font-size: 14px;
+  color: #5d5148;
+}
+
+.jr-hint-static { display: none; }
+
+.jr-stage {
+  position: relative;
+  margin-top: 20px;
+  padding: 0 var(--gutter);
+}
+
+/* 插画整体缓慢浮动，叠加指针带来的轻微视差 */
+.jr-art {
+  position: relative;
+  width: min(1180px, 100%);
+  margin: 0 auto;
+  translate: var(--jr-shift-x, 0) var(--jr-shift-y, 0);
+  transition: translate 420ms var(--ease-out);
+  animation: jr-float 9s ease-in-out infinite;
+}
+
+.jr-art img {
+  display: block;
+  width: 100%;
+  height: auto;
+  border-radius: 20px;
+}
+
+@keyframes jr-float {
+  0%, 100% { rotate: -0.25deg; }
+  50% { rotate: 0.25deg; }
+}
+
+/* 房子热区：一圈呼吸光 + 悬停浮出的标签 */
+.jr-hot {
+  position: absolute;
+  left: var(--jr-x);
+  top: var(--jr-y);
+  translate: -50% -50%;
+  width: clamp(76px, 9vw, 124px);
+  height: clamp(76px, 9vw, 124px);
+  padding: 0;
+  background: none;
+  border: 0;
+  border-radius: 50%;
+  cursor: pointer;
+}
+
+.jr-ring {
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  background: radial-gradient(circle, color-mix(in srgb, var(--jr-glow) 42%, transparent) 0%, transparent 68%);
+  opacity: 0;
+  transition: opacity 260ms var(--ease-out), scale 260ms var(--ease-out);
+}
+
+/* 常驻的站点别针，让人知道哪里可以点 */
+.jr-pin {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  translate: -50% -50%;
+  display: grid;
+  place-items: center;
+  width: 30px;
+  height: 30px;
+  font-size: 12px;
+  color: #fff;
+  background: var(--jr-red);
+  border: 2px solid #fff;
+  border-radius: 50%;
+  box-shadow: 0 4px 14px #42241440;
+  animation: jr-pulse 2.6s ease-in-out infinite;
+  transition: scale 260ms var(--ease-out);
+}
+
+@keyframes jr-pulse {
+  0%, 100% { scale: 1; }
+  50% { scale: 1.12; }
+}
+
+.jr-hot:hover .jr-ring,
+.jr-hot:focus-visible .jr-ring,
+.jr-hot[data-active] .jr-ring {
+  opacity: 1;
+  scale: 1.12;
+}
+
+.jr-hot:hover .jr-pin,
+.jr-hot:focus-visible .jr-pin,
+.jr-hot[data-active] .jr-pin {
+  scale: 1.25;
+  animation: none;
+}
+
+.jr-tag {
+  position: absolute;
+  left: 50%;
+  bottom: calc(100% + 6px);
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  translate: -50% 4px;
+  padding: 6px 12px;
+  font-size: 13px;
+  white-space: nowrap;
+  color: var(--jr-ink);
+  background: #fffffff2;
+  border-radius: 999px;
+  box-shadow: 0 6px 18px #42241426;
+  opacity: 0;
+  transition: opacity 220ms var(--ease-out), translate 220ms var(--ease-out);
+  pointer-events: none;
+}
+
+.jr-tag i {
+  font-size: 10px;
+  font-style: normal;
+  letter-spacing: 0.06em;
+  color: #8a7c70;
+}
+
+.jr-hot:hover .jr-tag,
+.jr-hot:focus-visible .jr-tag,
+.jr-hot[data-active] .jr-tag {
+  opacity: 1;
+  translate: -50% 0;
+}
+
+.jr-guide {
+  margin-top: 14px;
+  font-size: 11px;
+  letter-spacing: 0.08em;
+  text-align: center;
+  color: #6c5f55;
+}
+
+/* 点击房子后弹出的实习卡片 */
+.jr-card-layer {
+  position: fixed;
+  inset: 0;
+  z-index: 40;
+  display: grid;
+  place-items: center;
+  padding: var(--gutter);
+  background: #16130f4d;
+  backdrop-filter: blur(3px);
+}
+
+.jr-card {
+  position: relative;
+  width: min(860px, 100%);
+  max-height: calc(100svh - 40px);
+  overflow: auto;
+  padding: 30px 32px 28px;
+  background: #fbf7ef;
+  border-radius: 18px;
+  box-shadow: 0 24px 60px #42241433;
+  animation: jr-pop 260ms var(--ease-out) both;
+  scrollbar-width: thin;
+  scrollbar-color: #c8beb1 transparent;
+}
+
+.jr-card::-webkit-scrollbar {
+  width: 8px;
+}
+
+.jr-card::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.jr-card::-webkit-scrollbar-thumb {
+  background: #c8beb1;
+  border: 2px solid transparent;
+  border-radius: 999px;
+  background-clip: padding-box;
+}
+
+@keyframes jr-pop {
+  from { opacity: 0; translate: 0 14px; scale: 0.97; }
+  to { opacity: 1; translate: 0 0; scale: 1; }
+}
+
+.jr-close {
+  position: absolute;
+  top: 14px;
+  right: 14px;
+  width: 30px;
+  height: 30px;
+  font-size: 20px;
+  line-height: 1;
+  color: #5d5148;
+  background: #16130f0f;
+  border: 0;
+  border-radius: 50%;
+  cursor: pointer;
+}
+
+.jr-card-meta {
+  font-size: 11px;
+  letter-spacing: 0.06em;
+  color: #6c5f55;
+}
+
+.jr-card h3 {
+  margin-top: 6px;
+  font-family: 'Helvetica Neue', 'PingFang SC', sans-serif;
+  font-size: clamp(28px, 3vw, 40px);
+  font-weight: 600;
+  letter-spacing: -0.02em;
+}
+
+.jr-card-role {
+  margin-top: 4px;
+  font-size: 14px;
+  color: #5d5148;
+}
+
+.jr-card-place {
+  display: flex;
+  align-items: baseline;
+  gap: 10px;
+  margin-top: 12px;
+  font-size: 13px;
+  color: #5d5148;
+}
+
+.jr-card-place .mono {
+  font-size: 10px;
+  letter-spacing: 0.08em;
+  color: #9a8b7d;
+}
+
+.jr-card-skills {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin: 12px 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.jr-card-skills li {
+  padding: 5px 9px;
+  font-size: 12px;
+  color: #66564b;
+  background: #eee7dc;
+  border-radius: 999px;
+}
+
+.jr-card-branches,
+.jr-card-points {
+  display: grid;
+  gap: 12px;
+  margin: 20px 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.jr-card[data-layout='branches'] .jr-card-branches {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  align-items: start;
+}
+
+.jr-card[data-layout='points'] .jr-card-points {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  align-items: start;
+}
+
+.jr-card[data-layout='points'] .jr-card-points li:last-child:nth-child(odd) {
+  grid-column: 1 / -1;
+}
+
+.jr-card[data-layout='branches'] .jr-card-branches li:last-child {
+  grid-column: 1 / -1;
+}
+
+.jr-card-branches li {
+  padding: 14px;
+  background: #fff;
+  border-radius: 12px;
+  box-shadow: 0 1px 0 #16130f14;
+}
+
+.jr-card-branches img {
+  display: block;
+  width: 100%;
+  height: 132px;
+  margin-bottom: 12px;
+  object-fit: cover;
+  object-position: 50% 30%;
+  background: #ece4d9;
+  border-radius: 8px;
+}
+
+.jr-card-branches h4 {
+  font-size: 16px;
+  font-weight: 600;
+}
+
+.jr-card-branches p {
+  margin-top: 4px;
+  font-size: 13px;
+  line-height: 1.55;
+  color: #5d5148;
+}
+
+.jr-card-branches .jr-metric {
+  margin-top: 8px;
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--jr-red);
+}
+
+.jr-card-points li {
+  padding: 11px 14px;
+  font-size: 14px;
+  line-height: 1.5;
+  background: #fff;
+  border-radius: 10px;
+  box-shadow: 0 1px 0 #16130f14;
+}
+
+/* 窄屏与减少动态效果：不加载 3D，直接读站点列表 */
+.jr-fallback { display: none; }
+
+@media (max-width: 860px), (prefers-reduced-motion: reduce) {
+  .jr-stage,
+  .jr-hint { display: none; }
+
+  .jr-hint-static {
+    display: block;
+    margin-top: 8px;
+    font-size: 14px;
+    color: #5d5148;
+  }
+
+  .jr-fallback {
+    display: grid;
+    gap: 40px;
+    margin: 36px 0 0;
+    padding: 0 var(--gutter);
+    list-style: none;
+  }
+
+  .jr-fallback h3 {
+    margin-top: 6px;
+    font-family: 'Helvetica Neue', 'PingFang SC', sans-serif;
+    font-size: 30px;
+    font-weight: 600;
+    letter-spacing: -0.02em;
+  }
+
+  .jr-fallback .jr-meta {
+    font-size: 11px;
+    letter-spacing: 0.06em;
+    color: #6c5f55;
+  }
+
+  .jr-fallback .jr-role {
+    margin-top: 4px;
+    font-size: 14px;
+  }
+
+  .jr-fallback ul {
+    display: grid;
+    gap: 8px;
+    margin: 14px 0 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .jr-fallback ul li {
+    padding: 10px 14px;
+    font-size: 14px;
+    line-height: 1.5;
+    background: #fff;
+    border-radius: 10px;
+  }
+
+  .jr-fallback ul li b {
+    display: block;
+    font-weight: 600;
+  }
+}
+
+@media (max-width: 700px) {
+  .jr-card {
+    max-height: calc(100svh - 24px);
+    padding: 24px 20px;
+  }
+
+  .jr-card[data-layout='branches'] .jr-card-branches {
+    grid-template-columns: 1fr;
+  }
+
+  .jr-card[data-layout='points'] .jr-card-points {
+    grid-template-columns: 1fr;
+  }
+
+  .jr-card[data-layout='points'] .jr-card-points li:last-child:nth-child(odd) {
+    grid-column: auto;
+  }
+
+  .jr-card[data-layout='branches'] .jr-card-branches li:last-child {
+    grid-column: auto;
+  }
+}

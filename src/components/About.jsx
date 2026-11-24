@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import { education, experiences, profile, skills } from '../data/content'
+import { assetPath } from '../lib/assetPath'
 import { useReveal } from '../hooks'
 import './About.css'
 
@@ -22,7 +23,7 @@ export default function About() {
         <div className={`about-grid ${cls}`}>
           <figure className="about-portrait">
             {imgOk ? (
-              <img src="/avatar.jpg" alt={profile.name} onError={() => setImgOk(false)} />
+              <img src={assetPath('/avatar.jpg')} alt={profile.name} onError={() => setImgOk(false)} />
             ) : (
               <div className="about-mono" aria-hidden="true">
                 <span>{profile.name}</span>

@@ -95,7 +95,8 @@ function createClient(ws) {
     if (msg.id && pending.has(msg.id)) {
       const { resolve: res, reject } = pending.get(msg.id)
       pending.delete(msg.id)
-      msg.error ? reject(new Error(msg.error.message)) : res(msg.result)
+      if (msg.error) reject(new Error(msg.error.message))
+      else res(msg.result)
     } else if (msg.method) {
       events.push(msg)
     }

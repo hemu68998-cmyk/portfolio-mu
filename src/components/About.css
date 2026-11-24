@@ -96,7 +96,7 @@
   font-size: 17px;
   letter-spacing: 0.04em;
   border-bottom: 1px solid transparent;
-  transition: border-color 0.4s var(--ease), color 0.4s var(--ease);
+  transition: border-color var(--hover) ease, color var(--hover) ease;
 }
 
 .about-contact a:hover {

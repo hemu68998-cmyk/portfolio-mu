@@ -7,6 +7,13 @@
   backdrop-filter: blur(18px);
   background: linear-gradient(180deg, rgba(0, 0, 0, 0.86), rgba(0, 0, 0, 0.34));
   border-bottom: 1px solid var(--line);
+  transition: opacity 300ms var(--ease-out), transform 300ms var(--ease-out);
+}
+
+.nav.is-hidden {
+  opacity: 0;
+  transform: translateY(-100%);
+  pointer-events: none;
 }
 
 .nav-inner {
@@ -38,7 +45,7 @@
   font-size: var(--micro);
   letter-spacing: 0.1em;
   color: rgba(252, 249, 243, 0.28);
-  transition: color 0.4s var(--ease);
+  transition: color var(--hover) ease;
 }
 
 .nav-link.on .nav-num,
@@ -70,52 +77,63 @@
   font-size: 14px;
   letter-spacing: 0.12em;
   color: var(--text-dim);
-  padding: 6px 0;
-  transition: color 0.4s var(--ease);
+  /* 点击区域撑到 44px 高 */
+  padding: 13px 0;
+  transition: color var(--hover) ease;
 }
 
 .nav-link::after {
   content: '';
   position: absolute;
   left: 0;
-  bottom: 0;
+  bottom: 6px;
   height: 1px;
   width: 100%;
   background: var(--text);
   transform: scaleX(0);
   transform-origin: left;
-  transition: transform 0.5s var(--ease);
+  transition: transform 260ms var(--ease-out);
 }
 
-.nav-link:hover,
-.nav-link.on {
+.nav-link.on,
+.nav-link:hover {
   color: var(--text);
 }
 
-.nav-link.on::after,
-.nav-link:hover::after {
+.nav-link.on::after {
   transform: scaleX(1);
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .nav-link:hover::after {
+    transform: scaleX(1);
+  }
 }
 
 .nav-cta {
   display: inline-flex;
   align-items: center;
   gap: 10px;
-  padding: 11px 22px;
+  padding: 13px 22px;
   font-size: 14px;
   letter-spacing: 0.1em;
   border: 1px solid var(--line-strong);
   border-radius: 999px;
   white-space: nowrap;
-  transition: background 0.4s var(--ease), border-color 0.4s var(--ease),
-    transform 0.4s var(--ease);
+  transition: background var(--hover) ease, border-color var(--hover) ease,
+    color var(--hover) ease, transform var(--press) var(--ease-out);
 }
 
-.nav-cta:hover {
-  background: var(--text);
-  color: #000;
-  border-color: var(--text);
-  transform: translateY(-2px);
+@media (hover: hover) and (pointer: fine) {
+  .nav-cta:hover {
+    background: var(--text);
+    color: #000;
+    border-color: var(--text);
+  }
+}
+
+.nav-cta:active {
+  transform: scale(0.97);
 }
 
 @media (max-width: 980px) {

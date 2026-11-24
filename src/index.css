@@ -7,10 +7,12 @@
   --line: rgba(252, 249, 243, 0.12);
   --line-strong: rgba(252, 249, 243, 0.26);
   --text: #fcf9f3;
+  /* 开场屏幕的光铺满后落到这张纸色上，Profile 沿用同一底色 */
+  --paper: #f1ede6;
   --text-mid: rgba(252, 249, 243, 0.62);
-  --text-dim: rgba(252, 249, 243, 0.38);
+  /* 0.38 在黑底只有约 3.3:1，10–11px 的 mono 标签读不清；0.52 约 5.3:1 */
+  --text-dim: rgba(252, 249, 243, 0.52);
   --cyan: #4de3ff;
-  --violet: #9a7bff;
   --lime: #c6f24e;
   --amber: #ffb457;
   --shell: 1700px;
@@ -23,7 +25,10 @@
   --micro: 10px;
   --micro-lg: 11px;
   --tracking-label: 0.14em;
-  --ease-out: cubic-bezier(0, 0, 0.2, 1);
+  /* 交互反馈用强 ease-out：起步快，按下/悬停立刻有回应 */
+  --ease-out: cubic-bezier(0.23, 1, 0.32, 1);
+  --press: 160ms;
+  --hover: 220ms;
   color-scheme: dark;
 }
 
@@ -81,6 +86,18 @@ button {
 ::selection {
   background: var(--text);
   color: #000;
+}
+
+/* 键盘焦点：浏览器默认蓝框不属于这套配色 */
+:focus-visible {
+  outline: 1px solid var(--text);
+  outline-offset: 4px;
+  border-radius: 2px;
+}
+
+a:focus:not(:focus-visible),
+button:focus:not(:focus-visible) {
+  outline: none;
 }
 
 ::-webkit-scrollbar {
@@ -145,10 +162,11 @@ button {
   color: var(--text-mid);
 }
 
+/* 位移收小：34px 的上浮在长页面里每屏都"跳"一次，16px 足够提示进场 */
 .reveal {
   opacity: 0;
-  transform: translateY(34px);
-  transition: opacity 0.9s var(--ease), transform 0.9s var(--ease);
+  transform: translateY(16px);
+  transition: opacity 0.7s var(--ease), transform 0.7s var(--ease);
 }
 
 .reveal.in {
@@ -156,11 +174,11 @@ button {
   transform: none;
 }
 
+/* 减弱动效 = 去掉位移、保留淡入，而不是什么都不动 */
 @media (prefers-reduced-motion: reduce) {
   .reveal {
-    opacity: 1;
     transform: none;
-    transition: none;
+    transition: opacity 0.3s ease;
   }
   html {
     scroll-behavior: auto;
@@ -232,7 +250,6 @@ button {
   position: absolute;
   top: calc(100% + 6px);
   left: 50%;
-  transform: translateX(-50%);
   padding: 4px 8px;
   border-radius: 6px;
   background: #1b2130;
@@ -244,9 +261,15 @@ button {
   opacity: 0;
   pointer-events: none;
   z-index: 20;
-  transition: opacity 0.2s var(--ease-out);
+  /* 从触发点上方长出来，而不是凭空出现 */
+  transform: translateX(-50%) scale(0.97);
+  transform-origin: 50% 0;
+  transition: opacity 125ms var(--ease-out), transform 125ms var(--ease-out);
 }
 
+/* 首次悬停延迟 300ms 防误触；离开时立即收起 */
 .hint:hover::after {
   opacity: 1;
+  transform: translateX(-50%);
+  transition-delay: 300ms;
 }

@@ -24,15 +24,18 @@
   position: relative;
   z-index: 1;
   flex: 1;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
+  /* 入场券居中做视觉中心，标题缩成一行放在上方，联系方式压在下面 */
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  align-content: center;
+  justify-items: center;
+  text-align: center;
 }
 
 .contact-title {
-  margin-top: 30px;
+  margin-top: 18px;
   font-family: var(--font-serif);
-  font-size: clamp(40px, 5.4vw, 92px);
+  font-size: clamp(24px, 2.4vw, 40px);
   font-weight: 400;
   line-height: 1.06;
   letter-spacing: -0.025em;
@@ -46,8 +49,96 @@
   margin-top: 26px;
 }
 
+/* 入场券：TearTicket 票面放名字，红色存根撕下后复制邮箱 */
+.contact-ticket {
+  position: relative;
+  display: grid;
+  justify-items: center;
+  gap: 22px;
+  width: min(760px, 100%);
+  margin-top: clamp(40px, 5vw, 72px);
+}
+
+/* 票后一圈暖光，把视线拉到票面上 */
+.contact-ticket::before {
+  content: '';
+  position: absolute;
+  inset: -18% -12% 0;
+  z-index: -1;
+  background: radial-gradient(50% 50% at 50% 45%, #766a9640, transparent 70%);
+  filter: blur(30px);
+  pointer-events: none;
+}
+
+.contact-ticket .tear-ticket {
+  margin-inline: auto;
+}
+
+.contact-ticket-body {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  gap: 2px;
+  height: 100%;
+  padding: 26px 30px;
+  text-align: left;
+}
+
+.contact-ticket-body .mono {
+  font-size: 11px;
+  letter-spacing: 0.12em;
+  color: #6c5f55;
+}
+
+.contact-ticket-body b {
+  font-family: var(--font-serif);
+  font-size: 52px;
+  font-weight: 500;
+  line-height: 1.05;
+}
+
+.contact-ticket-body span:last-child {
+  font-size: 15px;
+}
+
+.contact-stub {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  height: 100%;
+  padding: 28px 24px;
+  color: #fff;
+  text-align: left;
+}
+
+.contact-stub .mono {
+  font-size: 10px;
+  letter-spacing: 0.14em;
+  opacity: 0.8;
+}
+
+.contact-stub b {
+  margin-top: auto;
+  font-size: 32px;
+  font-weight: 600;
+  line-height: 1.15;
+}
+
+.contact-stub span:nth-child(3) {
+  margin-bottom: auto;
+  font-size: 13px;
+}
+
+.contact-ticket-hint {
+  min-height: 1.5em;
+  font-size: 13px;
+  color: var(--text-mid);
+}
+
 .contact-links {
-  margin-top: clamp(56px, 6vw, 96px);
+  width: 100%;
+  margin-top: clamp(48px, 5vw, 80px);
+  text-align: left;
   border-top: 1px solid var(--line);
 }
 
@@ -58,11 +149,24 @@
   gap: 24px;
   padding: clamp(24px, 2.4vw, 38px) 0;
   border-bottom: 1px solid var(--line);
-  transition: padding 0.5s var(--ease), color 0.4s var(--ease);
 }
 
-.contact-link:hover {
-  padding-left: 20px;
+/* 悬停右移用 transform，原来动 padding-left 会触发整行重排 */
+.contact-label,
+.contact-value {
+  transition: transform 260ms var(--ease-out);
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .contact-link:hover .contact-label,
+  .contact-link:hover .contact-value {
+    transform: translateX(20px);
+  }
+
+  .contact-link:hover .contact-arrow {
+    color: var(--text);
+    transform: translate(6px, -6px);
+  }
 }
 
 .contact-label {
@@ -81,12 +185,7 @@
 .contact-arrow {
   font-size: 22px;
   color: var(--text-dim);
-  transition: transform 0.5s var(--ease), color 0.4s var(--ease);
-}
-
-.contact-link:hover .contact-arrow {
-  color: var(--text);
-  transform: translate(6px, -6px);
+  transition: transform 260ms var(--ease-out), color var(--hover) ease;
 }
 
 .contact-foot {
@@ -109,4 +208,56 @@
     flex-direction: column;
     gap: 10px;
   }
+}
+
+/* CRT 关机：亮屏压成一条横线，再缩成光点熄灭，随后联系方式淡入 */
+.contact-crt {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  z-index: 3;
+  width: 100%;
+  height: 100%;
+  translate: -50% -50%;
+  pointer-events: none;
+  background: #fcf9f3;
+  box-shadow: 0 0 60px 20px #fcf9f3aa;
+  opacity: 0;
+}
+
+.contact.is-off .contact-crt {
+  animation: contact-crt-off 900ms cubic-bezier(0.7, 0, 0.3, 1) both;
+}
+
+@keyframes contact-crt-off {
+  0% { opacity: 1; width: 100%; height: 100%; border-radius: 0; }
+  40% { opacity: 1; width: 100%; height: 3px; border-radius: 0; }
+  75% { opacity: 1; width: 6px; height: 3px; border-radius: 50%; }
+  100% { opacity: 0; width: 0; height: 0; border-radius: 50%; }
+}
+
+.contact-copy,
+.contact-ticket,
+.contact-links {
+  opacity: 0;
+  transform: translateY(16px);
+  transition: opacity 0.7s var(--ease), transform 0.7s var(--ease);
+}
+
+.contact.is-off .contact-copy,
+.contact.is-off .contact-ticket,
+.contact.is-off .contact-links {
+  opacity: 1;
+  transform: none;
+  transition-delay: 820ms;
+}
+
+.contact.is-off :is(.contact-ticket, .contact-links) { transition-delay: 940ms; }
+
+@media (prefers-reduced-motion: reduce) {
+  .contact.is-off .contact-crt { animation: none; }
+  .contact-copy,
+  .contact-ticket,
+  .contact-links { transform: none; transition: opacity 0.3s ease; }
+  .contact.is-off :is(.contact-copy, .contact-ticket, .contact-links) { transition-delay: 0ms; }
 }

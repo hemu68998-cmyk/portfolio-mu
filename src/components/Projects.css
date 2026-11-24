@@ -296,7 +296,7 @@
   color: var(--text-dim);
   border-top: 1px solid transparent;
   margin-top: -1px;
-  transition: color 0.4s var(--ease), border-color 0.4s var(--ease);
+  transition: color var(--hover) ease, border-color var(--hover) ease;
 }
 
 .work-dot + .work-dot {

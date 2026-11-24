@@ -3,10 +3,8 @@ import { useReveal } from '../hooks'
 import './Strengths.css'
 
 function Card({ item, i }) {
-  const [ref, cls] = useReveal()
-
   return (
-    <article className={`str-card ${cls}`} ref={ref} style={{ transitionDelay: `${i * 60}ms` }}>
+    <article className="str-card">
       <div className="str-head">
         <span className="str-num mono">{String(i + 1).padStart(2, '0')}</span>
         <span className="str-icon" aria-hidden="true">
@@ -40,7 +38,8 @@ export default function Strengths() {
           </p>
         </div>
 
-        <div className="str-grid">
+        {/* 一个容器只进场一次：整组卡片随标题区一起淡入，不再逐张滚动触发 */}
+        <div className={`str-grid ${cls}`}>
           {strengths.map((item, i) => (
             <Card item={item} i={i} key={item.title} />
           ))}

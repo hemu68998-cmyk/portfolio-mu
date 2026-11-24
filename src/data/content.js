@@ -1,3 +1,5 @@
+import { assetPath } from '../lib/assetPath'
+
 export const profile = {
   name: '何霂',
   roles: ['产品经理', 'AI 设计师'],
@@ -5,37 +7,38 @@ export const profile = {
   intro:
     '北京师范大学艺术设计硕士，产品设计学士。专注 AI 生态产品与体验设计，擅长把模糊的需求拆解成可验证的方案——从用户调研、需求定义，到用 AI 工具快速搭建可交互 Demo，再协同研发与 QA 推动落地。',
   tagline: '需求 · 提示词 · 生成 · 调试 · 优化',
-  status: '近期可到岗 · 可实习 3 个月以上',
+  status: '近期可到岗 · 每周 5 天 · 可实习 6 个月',
   contacts: [
     { label: '邮箱', value: '912067297@qq.com', href: 'mailto:912067297@qq.com' },
     { label: '电话 / 微信', value: '15756550807', href: 'tel:15756550807' },
   ],
   stats: [
-    { value: '3万', label: 'MAU 增长', note: 'NAS 客户端重构' },
-    { value: '1.6万', label: '回端数量', note: '功能建设成果' },
-    { value: '0→1', label: '产品重构', note: 'NAS 网盘客户端' },
+    { value: '2.6万', label: 'MAU 增长', note: 'NAS 功能建设' },
+    { value: '1.5万', label: '回端数量', note: 'NAS 体验优化' },
+    { value: '52.28%', label: '收入增长', note: 'NAS 会员商业化' },
     { value: '13', label: '社群从 0 搭建', note: '用户运营' },
   ],
 }
 
 export const nav = [
   { id: 'hero', label: '首页' },
-  { id: 'about', label: '关于我' },
-  { id: 'work', label: '精选项目' },
-  { id: 'strength', label: '个人优势' },
+  { id: 'project-orbit', label: '设计作品' },
+  { id: 'profile', label: '关于我' },
+  { id: 'journey', label: '实习经历' },
+  { id: 'lab', label: 'AI 实验室' },
   { id: 'contact', label: '联系我' },
 ]
 
 export const experiences = [
   {
-    period: '2026.05 — 2026.08',
+    period: '2026.06 — 2026.11',
     company: '百度',
-    role: 'AI 生态产品经理',
+    role: 'AI 产品经理',
   },
   {
-    period: '2025.12 — 2026.02',
+    period: '2025.12 — 2026.03',
     company: '新东方文旅',
-    role: '新媒体运营',
+    role: '产品运营',
   },
   {
     period: '2025.06 — 2025.09',
@@ -165,5 +168,178 @@ export const education = [
     school: '四川师范大学',
     major: '产品设计 · 学士',
     courses: '产品设计、人机工程学、用户体验研究、设计心理学、视觉传达设计、服务设计研究',
+  },
+]
+
+export const toolkit = ['Codex', 'Claude Code', 'Figma', '墨刀', 'PS', 'AI', 'Rhino', 'InDesign', 'Blender', 'XMind', 'SQL', 'Excel', '剪映']
+export const languages = ['CET-6', '普通话二甲', '意大利语 A2']
+
+// 作品展厅卡片：内容与图片都取自作品集，gallery 是弹层里依次展示的作品集页面。
+const page = (number) => assetPath(`/works/page-${String(number).padStart(2, '0')}.jpg`)
+
+export const works = [
+  {
+    title: '智能陪伴机器人',
+    summary: '为独居老人做的陪伴机器人，提供安全监测、生活协助、社交互动和远程监护。',
+    facts: [['类型', '产品设计'], ['内容', '用户调研 · 草图 · 建模渲染 · App 界面']],
+    image: assetPath('/works/cover-robot.jpg'),
+    gallery: [page(3), page(6), page(7), page(8)],
+  },
+  {
+    title: '面向老年人的多功能可移动输液架',
+    summary: '结合人机工程学、老年医学和心理学，为老年人重新设计输液架。',
+    facts: [['类型', '产品设计'], ['内容', '用户旅程 · 痛点分析 · 草图 · 场景渲染']],
+    image: assetPath('/works/cover-infusion.jpg'),
+    gallery: [page(9), page(11), page(12), page(13)],
+  },
+  {
+    title: '熊猫基地移动餐车',
+    summary: '开在成都熊猫基地里的街头小吃餐车，从游客动线开始设计。',
+    facts: [['类型', '空间与服务设计'], ['内容', '用户旅程图 · 餐车效果图 · 点餐 App']],
+    image: assetPath('/works/cover-truck.jpg'),
+    gallery: [page(18), page(19), page(20)],
+  },
+  {
+    title: '意大利咖啡厅品牌设计',
+    summary: '为校园咖啡厅设计品牌形象，通过空间和周边传达学院文化。',
+    facts: [['类型', '品牌设计'], ['内容', 'IP 形象 · 海报 · 包装 · 菜单']],
+    image: assetPath('/works/cover-coffee.jpg'),
+    gallery: [page(27), page(28), page(29)],
+  },
+  {
+    title: 'IP 角色与手办',
+    summary: '多个 3D 角色和手办渲染。',
+    facts: [['类型', '3D 角色设计']],
+    image: assetPath('/works/cover-figures.jpg'),
+    gallery: [page(30)],
+  },
+  {
+    title: '花见宇宙',
+    summary: '《花见宇宙》是一本面向 10—14 岁小初衔接阶段孩子的插花科普杂志，将插花、美育、劳育与心理表达结合成一个可以探索的专属小宇宙。',
+    facts: [['类型', '教育产品 · 杂志设计'], ['内容', '用户调研 · 内容策划 · 视觉系统 · 内页设计']],
+    image: assetPath('/works/huajian-cover.jpg'),
+    gallery: [
+      assetPath('/works/huajian-p17.jpg'),
+      assetPath('/works/huajian-p19.jpg'),
+      assetPath('/works/huajian-photo-garden.jpg'),
+      assetPath('/works/huajian-photo-spread.jpg'),
+      assetPath('/works/huajian-photo-poster.jpg'),
+    ],
+  },
+]
+
+// CH03 倒叙实习路线：从最近的一站开回最开始。
+export const journey = [
+  {
+    stop: '第 1 站',
+    company: '百度',
+    role: 'AI 产品经理',
+    period: '2026.06 — 2026.11',
+    transfer: true,
+    skills: ['用户洞察', '产品方案', 'AI Demo 验证'],
+    branches: [
+      { title: 'NAS 功能建设与用户体验', text: '通过用户调研和数据分析明确功能方向与范围，输出 PRD、流程图和测试规范；使用 AI 工具搭建可交互 Demo，快速验证产品方案、交互流程与技术可行性。', metric: 'MAU +2.6 万 · 回端 1.5 万' },
+      { title: '开放平台 Coding Agent', text: '针对开发者接入百度网盘时接口选择复杂、鉴权配置困难和联调成本高的问题，用 Skill 与 MCP 把网盘能力封装成标准流程，帮助开发者快速完成应用搭建与本地联调。' },
+      { title: '跨端消费与协作交付', text: '完成百度网盘与小度及其他智能设备的通用跨网投屏 MVP，明确功能边界和关键交互，协同主端、研发与测试推进落地，并将能力封装为 MCP 工具。' },
+      { title: 'PC 端 2D / 3D 文件预览', text: '推动百度网盘 PC 端实现 2D / 3D 文件预览，完成需求设计、埋点方案，以及研发与商业化协同，推动本地 CAD 文件预览上线。' },
+      { title: '商业化分析与 SVIP 下行治理', text: '回溯包月、包季历史定价和续费表现，推出新会员商品与生态流量包，并梳理开放平台下行流量问题进行 SVIP 治理。', metric: '收入 +52.28% · 月均增收 15—16 万' },
+    ],
+  },
+  {
+    stop: '第 2 站',
+    company: '新东方文旅',
+    role: '产品运营',
+    period: '2025.12 — 2026.03',
+    skills: ['用户洞察', '产品运营', '数据复盘'],
+    branches: [
+      {
+        title: '用户互动与需求洞察',
+        text: '负责抖音、小红书等全平台用户互动与咨询响应，围绕账号定位在评论区精准触达目标用户；沉淀用户高频问题与核心诉求，反哺内容方向与产品话术优化。',
+        metric: '提升意向咨询率与品牌好感度',
+      },
+      {
+        title: '用户分层与转化运营',
+        text: '依托平台规则识别并筛选高潜力客群，通过主动私信建立连接、持续跟进，搭建精细化运营路径推动用户转化。',
+        metric: '20 天完成 50+ 用户引流留资',
+      },
+      {
+        title: '内容策划与账号运营',
+        text: '根据 9 个账号的差异化定位，统筹内容选题策划、脚本撰写与图文制作全流程，保障账号稳定更新与内容质量。',
+        metric: '为引流转化提供持续内容支撑',
+      },
+      {
+        title: '数据复盘与策略迭代',
+        text: '定期梳理互动、传播、转化全链路数据，搭建用户问题与需求标签体系，沉淀可复用的运营 SOP，输出复盘报告与可落地优化建议。',
+        metric: '驱动内容迭代与运营策略升级',
+      },
+    ],
+  },
+  {
+    stop: '第 3 站',
+    company: '作业帮',
+    role: '用户运营',
+    period: '2025.06 — 2025.09',
+    skills: ['用户运营', '社群搭建', '转化提效'],
+    branches: [
+      {
+        title: '需求分析运营',
+        text: '精准触达目标用户，深度拆解用户需求并构建清晰画像；联动主讲老师团队，搭建并落地包含 1v1 沟通、社群运营、课程介绍的全流程 SOP 体系。',
+        metric: '企业微信添加率 95% · 服务学员 400+ · 满意度 98%',
+      },
+      {
+        title: '社群搭建运营',
+        text: '从 0 到 1 搭建并运营 13 个高活跃用户社群，单群规模稳定在 100 人左右；通过精细化互动运营和分层运营节奏激活社群氛围，精准引导学员及家长购课。',
+        metric: '13 个社群 · 单群规模约 100 人',
+      },
+      {
+        title: '转化提效运营',
+        text: '通过运营和输出课程宣传文案、宣传海报，聚焦所负责用户群体；同步搭建购后专属辅导体系，持续提升学生黏性。',
+        metric: '3 个月用户转化率超过 55%',
+      },
+    ],
+  },
+]
+
+// CH04 AI 实验室
+export const film = {
+  title: '《害怕春天的雪人》',
+  length: `2'30"`,
+  style: '毛毡治愈风短片',
+  src: assetPath('/film/snowman.mp4'),
+  poster: assetPath('/lab/snowman-title.jpg'),
+  notes: ['拆成 10 个情感节点', '打磨 80+ 个镜头版本', '角色跨镜头一致性 90%+', '“小雪人融化”迭代 4 轮'],
+  pipeline: ['nano banana/gpt', '可灵 AI/即梦', '后期整合'],
+  sheets: [
+    { src: assetPath('/lab/snowman-cast.jpg'), alt: '小雪人角色多角度设定' },
+    { src: assetPath('/lab/snowman-mouse.jpg'), alt: '小老鼠角色多角度设定' },
+  ],
+}
+
+export const dushulang = {
+  title: '读书郎 AI 错题本',
+  key: { src: assetPath('/lab/dushulang-key.jpg'), alt: '读书郎 AI 错题本主视觉：错题还在手抄？一拍自动收录' },
+  video: { src: assetPath('/lab/dushulang.mp4'), poster: assetPath('/lab/dushulang-title.jpg') },
+  sheets: [
+    { src: assetPath('/lab/dushulang-mother.jpg'), alt: '妈妈角色三视图' },
+    { src: assetPath('/lab/dushulang-boy.jpg'), alt: '男孩居家角色三视图' },
+    { src: assetPath('/lab/dushulang-student.jpg'), alt: '男孩校服角色三视图' },
+  ],
+  caption: '用角色视觉锚点让人物在每个镜头里保持一致',
+}
+
+export const codingWorks = [
+  {
+    title: '数字展览平台',
+    text: '无限画布浏览、作品详情弹窗、作品管理面板，从 0 到 1 完成需求、原型到上线。',
+    images: [
+      { src: assetPath('/lab/exhibit-canvas.jpg'), alt: '数字展览平台无限画布' },
+      { src: assetPath('/lab/exhibit-detail.jpg'), alt: '数字展览平台作品详情弹窗' },
+      { src: assetPath('/lab/exhibit-manage.jpg'), alt: '数字展览平台作品管理面板' },
+    ],
+  },
+  {
+    title: '学习计划小程序',
+    text: '网盘里的课程，按考试日期自动排成每天的任务。',
+    images: [{ src: assetPath('/journey/study-plan.jpg'), alt: '学习计划小程序四个引导页' }],
   },
 ]

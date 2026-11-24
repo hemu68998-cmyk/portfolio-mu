@@ -1,0 +1,308 @@
+.lab {
+  position: relative;
+  padding: clamp(96px, 9vw, 140px) var(--gutter) clamp(72px, 7vw, 110px);
+  background: radial-gradient(70% 50% at 30% 0%, #2a211a 0%, #0d0b09 62%);
+  color: var(--text);
+}
+
+.lab-shell {
+  max-width: var(--shell);
+  margin: 0 auto;
+}
+
+.lab-head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 24px;
+}
+
+.lab-ch {
+  display: inline-block;
+  padding: 3px 8px;
+  font-size: 11px;
+  letter-spacing: 0.12em;
+  color: #16130f;
+  background: #f6d36b;
+}
+
+.lab-head h2 {
+  margin-top: 10px;
+  font-family: 'Helvetica Neue', 'PingFang SC', sans-serif;
+  font-size: clamp(30px, 3.6vw, 60px);
+  font-weight: 600;
+  line-height: 1.04;
+  letter-spacing: -0.02em;
+}
+
+.lab-head p:last-child {
+  margin-top: 8px;
+  color: var(--text-mid);
+}
+
+/* 遥控器：两颗换台键 */
+.lab-remote {
+  display: flex;
+  gap: 6px;
+  padding: 6px;
+  border-radius: 999px;
+  background: #1d1915;
+  box-shadow: inset 0 1px 0 #ffffff14, 0 10px 30px #00000066;
+}
+
+.lab-remote button {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 18px;
+  border: 0;
+  border-radius: 999px;
+  background: transparent;
+  color: var(--text-mid);
+  font-size: 14px;
+  cursor: pointer;
+  transition: background var(--hover) ease, color var(--hover) ease, transform var(--press) var(--ease-out);
+}
+
+.lab-remote button span {
+  font-size: 11px;
+  opacity: 0.7;
+}
+
+.lab-remote button[aria-selected='true'] {
+  background: #f6d36b;
+  color: #16130f;
+}
+
+.lab-remote button:active { transform: scale(0.97); }
+
+@media (hover: hover) and (pointer: fine) {
+  .lab-remote button[aria-selected='false']:hover { color: var(--text); background: #ffffff12; }
+}
+
+.lab-screen {
+  position: relative;
+  margin-top: clamp(32px, 4vw, 56px);
+}
+
+/* 换台时闪一下雪花 */
+.lab-static {
+  position: absolute;
+  inset: -12px;
+  z-index: 5;
+  pointer-events: none;
+  border-radius: 20px;
+  background:
+    repeating-linear-gradient(0deg, #ffffff10 0 2px, transparent 2px 4px),
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='1.1' numOctaves='2'/%3E%3C/filter%3E%3Crect width='160' height='160' filter='url(%23n)'/%3E%3C/svg%3E");
+  opacity: 0;
+  animation: lab-static 320ms ease-out;
+}
+
+@keyframes lab-static {
+  0% { opacity: 0.85; }
+  100% { opacity: 0; }
+}
+
+.lab-panel[hidden] { display: none; }
+
+/* ---- 04-1 AI 影像 ---- */
+.lab-film {
+  display: grid;
+  grid-template-columns: minmax(0, 1.5fr) minmax(280px, 0.8fr);
+  gap: clamp(20px, 3vw, 48px);
+}
+
+.lab-tv {
+  padding: clamp(12px, 1.4vw, 22px);
+  border-radius: 30px;
+  background: linear-gradient(160deg, #3a322b, #1c1814 70%);
+  box-shadow: inset 0 1px 0 #ffffff1c, 0 30px 80px #000000a0, 0 0 120px #f6d36b14;
+}
+
+.lab-tv video {
+  display: block;
+  width: 100%;
+  aspect-ratio: 946 / 528;
+  border-radius: 16px;
+  background: #000;
+}
+
+.lab-tv-label {
+  margin-top: 12px;
+  padding-inline: 6px;
+  font-size: 12px;
+  color: var(--text-mid);
+}
+
+.lab-notes ul {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+/* 手写便签：交替微倾斜 */
+.lab-notes li {
+  padding: 16px 14px 18px;
+  font-size: 15px;
+  font-weight: 500;
+  line-height: 1.45;
+  color: #2a2117;
+  background: #f6e7a8;
+  box-shadow: 0 10px 24px #00000055;
+  rotate: -1.6deg;
+}
+
+.lab-notes li:nth-child(even) { rotate: 1.4deg; background: #f3dcc8; }
+
+.lab-pipeline {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 10px;
+  margin-top: 22px;
+  font-size: 15px;
+}
+
+.lab-pipeline .label { color: var(--text-dim); }
+
+.lab-sheets {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 8px;
+  margin-top: 18px;
+}
+
+.lab-sheets img,
+.lab-dushulang img,
+.lab-work-images img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 10px;
+  background: #f3f1ee;
+}
+
+.lab-dushulang {
+  grid-column: 1 / -1;
+  display: grid;
+  grid-template-columns: minmax(0, 3fr) minmax(0, 1fr);
+  gap: 10px;
+  margin: clamp(16px, 2vw, 28px) 0 0;
+}
+
+.lab-dushulang-key { aspect-ratio: 1038 / 583; }
+
+.lab-dushulang-video {
+  min-width: 0;
+  padding: clamp(12px, 1.4vw, 22px);
+}
+
+.lab-dushulang-video video {
+  aspect-ratio: 16 / 9;
+}
+
+.lab-dushulang-sheets {
+  display: grid;
+  grid-template-rows: repeat(3, minmax(0, 1fr));
+  gap: 10px;
+  min-height: 0;
+}
+
+.lab-dushulang-sheets img {
+  object-fit: contain;
+  background: #fff;
+}
+
+.lab-dushulang figcaption {
+  grid-column: 1 / -1;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  font-size: 14px;
+  color: var(--text-mid);
+}
+
+.lab-dushulang figcaption b { color: var(--text); font-weight: 600; }
+
+/* ---- 04-2 AI Coding ---- */
+.lab-coding {
+  display: grid;
+  grid-template-columns: minmax(0, 1.5fr) minmax(0, 1fr);
+  grid-template-rows: auto auto;
+  gap: clamp(16px, 2vw, 28px);
+}
+
+.lab-work {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  padding: clamp(14px, 1.4vw, 20px);
+  border: 1px solid var(--line);
+  border-radius: 22px;
+  background: #ffffff08;
+}
+
+.lab-work[data-images='3'] { grid-row: span 2; }
+
+.lab-work-images {
+  display: grid;
+  gap: 8px;
+}
+
+.lab-work[data-images='3'] .lab-work-images {
+  grid-template-columns: minmax(0, 1.9fr) minmax(0, 1fr);
+  grid-template-rows: repeat(2, minmax(0, 1fr));
+}
+
+.lab-work[data-images='3'] .lab-work-images img:nth-child(3) { grid-row: 1 / 3; grid-column: 2; object-fit: contain; background: #fff; }
+.lab-work[data-images='3'] .lab-work-images img:not(:nth-child(3)) { aspect-ratio: 845 / 481; }
+
+.lab-work[data-images='1'] .lab-work-images img { aspect-ratio: 2 / 1; object-position: 50% 40%; }
+
+/* 没有截图的卡：用大字和箭头提示“你正在看的就是它” */
+.lab-work[data-images='0'] {
+  justify-content: flex-end;
+  min-height: 220px;
+  background: linear-gradient(150deg, #f6d36b, #e9a86f);
+  color: #16130f;
+}
+
+.lab-work h3 {
+  font-size: clamp(20px, 1.7vw, 26px);
+  font-weight: 600;
+}
+
+.lab-work p {
+  margin-top: 6px;
+  font-size: 14px;
+  line-height: 1.6;
+  color: var(--text-mid);
+}
+
+.lab-work[data-images='0'] p { color: #3b2f24; }
+
+.lab-work a {
+  display: inline-block;
+  margin-top: 14px;
+  font-size: 14px;
+  text-decoration: underline;
+  text-underline-offset: 0.25em;
+}
+
+@media (max-width: 900px) {
+  .lab-film,
+  .lab-coding { grid-template-columns: minmax(0, 1fr); }
+  .lab-work[data-images='3'] { grid-row: auto; }
+  .lab-dushulang { grid-template-columns: minmax(0, 1fr); }
+  .lab-dushulang-sheets { grid-template-rows: none; grid-template-columns: repeat(3, minmax(0, 1fr)); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .lab-static { display: none; }
+}

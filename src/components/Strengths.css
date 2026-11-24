@@ -15,8 +15,7 @@
   border-radius: 5px;
   background: linear-gradient(150deg, var(--panel), rgba(255, 255, 255, 0.006));
   overflow: hidden;
-  transition: opacity 0.9s var(--ease), transform 0.9s var(--ease),
-    border-color 0.5s var(--ease), background 0.5s var(--ease);
+  transition: border-color var(--hover) ease, background var(--hover) ease;
 }
 
 .str-card::before {
@@ -26,16 +25,18 @@
   height: 1px;
   background: linear-gradient(90deg, transparent, var(--text), transparent);
   opacity: 0;
-  transition: opacity 0.5s var(--ease);
+  transition: opacity var(--hover) ease;
 }
 
-.str-card:hover {
-  border-color: rgba(255, 255, 255, 0.2);
-  background: linear-gradient(150deg, var(--panel-strong), rgba(255, 255, 255, 0.01));
-}
+@media (hover: hover) and (pointer: fine) {
+  .str-card:hover {
+    border-color: rgba(255, 255, 255, 0.2);
+    background: linear-gradient(150deg, var(--panel-strong), rgba(255, 255, 255, 0.01));
+  }
 
-.str-card:hover::before {
-  opacity: 1;
+  .str-card:hover::before {
+    opacity: 1;
+  }
 }
 
 .str-head {
